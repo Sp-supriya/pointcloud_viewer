@@ -1,0 +1,33 @@
+import sys
+import open3d as o3d
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QFileDialog
+from viewer import PointCloudViewer
+
+class PointCloudApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle("Point Cloud Viewer")
+        self.setGeometry(100, 100, 400, 200)
+
+        layout = QVBoxLayout()
+
+        self.loadButton = QPushButton("Load Point Cloud")
+        self.loadButton.clicked.connect(self.loadPointCloud)
+
+        layout.addWidget(self.loadButton)
+        self.setLayout(layout)
+
+    def loadPointCloud(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Point Cloud File", "", "Point Cloud Files (*.ply *.pcd)")
+        if file_path:
+            self.viewer = PointCloudViewer(file_path)
+            self.viewer.run()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = PointCloudApp()
+    window.show()
+    sys.exit(app.exec_())
